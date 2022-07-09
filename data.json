@@ -1,0 +1,90 @@
+[
+    {
+        "Dia: ": 1,
+        "Poblacion total (vivos)": 60,
+        "Casos activos:": 10,
+        "Susceptibles a enfermarse: ": 50,
+        "Sanados de enfermedad (vivos): ": 0,
+        "Fallecidos: ": 0
+    },
+    {
+        "Dia: ": 2,
+        "Poblacion total (vivos)": 60,
+        "Casos activos:": 11,
+        "Susceptibles a enfermarse: ": 49,
+        "Sanados de enfermedad (vivos): ": 0,
+        "Fallecidos: ": 0
+    },
+    {
+        "Dia: ": 3,
+        "Poblacion total (vivos)": 60,
+        "Casos activos:": 12,
+        "Susceptibles a enfermarse: ": 48,
+        "Sanados de enfermedad (vivos): ": 0,
+        "Fallecidos: ": 0
+    },
+    {
+        "Dia: ": 4,
+        "Poblacion total (vivos)": 60,
+        "Casos activos:": 15,
+        "Susceptibles a enfermarse: ": 45,
+        "Sanados de enfermedad (vivos): ": 0,
+        "Fallecidos: ": 0
+    },
+    {
+        "Dia: ": 5,
+        "Poblacion total (vivos)": 60,
+        "Casos activos:": 17,
+        "Susceptibles a enfermarse: ": 43,
+        "Sanados de enfermedad (vivos): ": 0,
+        "Fallecidos: ": 0
+    },
+    {
+        "Dia: ": 6,
+        "Poblacion total (vivos)": 60,
+        "Casos activos:": 20,
+        "Susceptibles a enfermarse: ": 40,
+        "Sanados de enfermedad (vivos): ": 0,
+        "Fallecidos: ": 0
+    },
+    {
+        "Dia: ": 7,
+        "Poblacion total (vivos)": 60,
+        "Casos activos:": 20,
+        "Susceptibles a enfermarse: ": 40,
+        "Sanados de enfermedad (vivos): ": 0,
+        "Fallecidos: ": 0
+    },
+    {
+        "Dia: ": 8,
+        "Poblacion total (vivos)": 60,
+        "Casos activos:": 23,
+        "Susceptibles a enfermarse: ": 37,
+        "Sanados de enfermedad (vivos): ": 0,
+        "Fallecidos: ": 0
+    },
+    {
+        "Dia: ": 9,
+        "Poblacion total (vivos)": 57,
+        "Casos activos:": 13,
+        "Susceptibles a enfermarse: ": 37,
+        "Sanados de enfermedad (vivos): ": 7,
+        "Fallecidos: ": 3
+    },
+    {
+        "Dia: ": 10,
+        "Poblacion total (vivos)": 57,
+        "Casos activos:": 14,
+        "Susceptibles a enfermarse: ": 36,
+        "Sanados de enfermedad (vivos): ": 7,
+        "Fallecidos: ": 3
+    },
+    {
+        "Dia: ": 11,
+        "Poblacion total (vivos)": 57,
+        "Casos activos:": 16,
+        "Susceptibles a enfermarse: ": 34,
+        "Sanados de enfermedad (vivos): ": 7,
+        "Fallecidos: ": 3
+    }
+]

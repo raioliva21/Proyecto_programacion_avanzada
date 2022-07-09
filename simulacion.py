@@ -7,19 +7,16 @@ class Simulacion():
     def __init__(self, comunidad, enfermedad):
         self.__comunidad = comunidad
         self.__enfermedad = enfermedad
+        self.__array = {}
 
     
     def run(self, numero_dias):
-        self.dia = 1
-        for self.dia in range(numero_dias):
+        for self.dia in range(1, numero_dias):
             self.contagio_x_contacto(self.dia)
             self.imprimir_contagiados()
             self.crear_diccionario()
-            if self.dia == 1:
-                # limpia archivo json donde se almacenaba data de simulacion anterior
-                self.write_data()
-            # agrega data de simulacion actual a archivo json
-            self.add_data()
+        self.write_data()
+            
     
     def contagio_x_contacto(self, numero_dias):
         for i in range(len(self.__comunidad.lista_ciudadanos)):
@@ -105,28 +102,27 @@ class Simulacion():
 
         print("--------------------------------------------------")
 
+    
     """ se crea diccionario """
     def crear_diccionario(self):
-        
+
         self.__dict ={
-            "Dia: " : self.dia,
-            "Poblacion total (vivos)" : self.__poblacion,
-            "Casos activos:" : self.__casos_activos,
-            "Susceptibles a enfermarse: " : self.__poblacion_susceptible,
-            "Sanados de enfermedad (vivos): " : self.__poblacion_sanada,
-            "Fallecidos: ": len(self.__comunidad.lista_ciudadanos)-self.__poblacion
+            f"Dia {self.dia} ": [ 
+                {"Poblacion total (vivos)" : self.__poblacion,
+                "Casos activos:" : self.__casos_activos,
+                "Susceptibles a enfermarse: " : self.__poblacion_susceptible,
+                "Sanados de enfermedad (vivos): " : self.__poblacion_sanada,
+                "Fallecidos: ": len(self.__comunidad.lista_ciudadanos)-self.__poblacion}
+            ]
         }
+        self.__array.update(self.__dict)
 
-    
+
     def write_data(self):
-        
-        with open("data.json", "w") as file:
-            json.dump(self.__dict, file, indent=4)
 
-    def add_data(self):
-        
-        with open("data.json", "a") as file:
-            json.dump(self.__dict, file, indent=4)
+        with open("data.json", "w") as file:
+            json.dump(self.__array, file, indent=4)
+
     
 
 
