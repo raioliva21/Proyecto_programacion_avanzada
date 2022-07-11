@@ -1,23 +1,27 @@
-class Enfermedad():
-    """docstring for Enfermedad."""
 
-    def __init__(self, probabilidadInfeccion, promedio_pasos):
+class Enfermedad():
+
+    def __init__(self, probabilidadInfeccion, promedio_pasos,
+                inicio_estado_infeccioso, inicio_estado_sintomatico):
         self.__probabilidadInfeccion =  probabilidadInfeccion
         self.__promedio_pasos = promedio_pasos
+        self.__inicio_estado_infeccioso = inicio_estado_infeccioso
+        self.__inicio_estado_sintomatico = inicio_estado_sintomatico
 
-    #getters and setters
     @property
     def probabilidadInfeccion(self):
         return self.__probabilidadInfeccion
-
-    @probabilidadInfeccion.setter
-    def probabilidadInfeccion(self, variable):
-        self.__probabilidadInfeccion = variable
-
+    
     @property
-    def promedioPasos(self):
+    def promedio_pasos(self):
         return self.__promedio_pasos
 
-    @promedioPasos.setter
-    def promedioPasos(self, variable):
-        self.__promedio_pasos = variable
+    @property
+    def inicio_estado_infeccioso(self):
+        return self.__inicio_estado_infeccioso
+    
+    @property
+    def inicio_estado_sintomatico(self):
+        return self.__inicio_estado_sintomatico
+    
+    

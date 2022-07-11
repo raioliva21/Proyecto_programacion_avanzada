@@ -1,109 +1,128 @@
-import random as ran
-import json
+import random 
+#import json
+from infectado import Infectado
 
 class Simulacion():
-    """docstring for Simulacion."""
 
-    def __init__(self, comunidad, enfermedad):
+    def __init__(self, comunidad):
         self.__comunidad = comunidad
-        self.__enfermedad = enfermedad
-        self.__array = {}
+        self.porcentaje_proba_infeccion = self.__comunidad.probabilidad_contacto_estrecho * \
+                            self.__comunidad.enfermedad.probabilidadInfeccion * 100
+        # identificacion (numero) de infectado
+        self.id = None
 
-    
     def run(self, numero_dias):
-        for self.dia in range(1, numero_dias):
-            self.contagio_x_contacto(self.dia)
-            self.imprimir_contagiados()
-            self.crear_diccionario()
-        self.write_data()
-            
-    
-    def contagio_x_contacto(self, numero_dias):
-        for i in range(len(self.__comunidad.lista_ciudadanos)):
-            potencial_contagio = False
-            for k in range(len(self.__comunidad.lista_ciudadanos[i].familia)):
-                if (self.__comunidad.lista_ciudadanos[k].estado and
-                    self.__comunidad.lista_ciudadanos[k].sano ==False):
-                    potencial_contagio = True
 
-            #if para que se infecten
-            if(self.__comunidad.lista_ciudadanos[i].estado==True and
-               self.__comunidad.lista_ciudadanos[i].inmune==False and
-               self.__comunidad.lista_ciudadanos[i].sano==True and 
-               potencial_contagio):
-                # para enfermar segun probabilidad y la cantidad de personas que se asocian
-                random = ran.randint(0,100)
-                #probabilidad conexion es para los contactos estrechos
-                if (random < (self.__enfermedad.probabilidadInfeccion *\
-                     self.__comunidad.probabilidad_conexion*100)):
-                    self.__comunidad.lista_ciudadanos[i].sano = False
-                    self.__comunidad.lista_ciudadanos[i].inmune=True
-                    self.__comunidad.lista_ciudadanos[i].infectado = True
-                    self.__comunidad.lista_ciudadanos[i].contador = numero_dias
-
-            """ fragmento que determina si caso activo sana """
-            if(self.__comunidad.lista_ciudadanos[i].estado and
-               self.__comunidad.lista_ciudadanos[i].sano==False and
-               (numero_dias) == self.__enfermedad.promedioPasos+\
-                   self.__comunidad.lista_ciudadanos[i].contador):
-                probabilidad_muerte = ran.randint(0,100)
-                if probabilidad_muerte <= 25:
-                    self.__comunidad.lista_ciudadanos[i].sano = False
-                    self.__comunidad.lista_ciudadanos[i].estado = False
-                    self.__comunidad.lista_ciudadanos[i].infectado = False
-                else:
-                    self.__comunidad.lista_ciudadanos[i].sano=True
-                    self.__comunidad.lista_ciudadanos[i].infectado = False
-
-
-    def crea_contactos(self):
-
-        avance = 0
-        while avance < len(self.__comunidad.lista_ciudadanos):
-            for i in range(self.__comunidad.promedio_conexion):
-                random = ran.randint(0,(len(self.__comunidad.lista_ciudadanos)-1))
-                # si listas no estan llenas sobre el promedio de conexion
-                if (len(self.__comunidad.lista_ciudadanos[avance].familia) < \
-                    self.__comunidad.promedio_conexion and
-                    len(self.__comunidad.lista_ciudadanos[random].familia)< \
-                        self.__comunidad.promedio_conexion):
-                    # añade a lista si no se tiene familia 
-                    self.__comunidad.lista_ciudadanos[avance].familiaAdd(random)
-            avance = avance + 1
-
-    def imprimir_contagiados(self):
-
-        self.__casos_activos = 0
-        self.__poblacion = 0
-        self.__poblacion_susceptible = 0
-        self.__poblacion_inmune = 0
-
-        for i in range(len(self.__comunidad.lista_ciudadanos)):
-            if (self.__comunidad.lista_ciudadanos[i].estado):
-                if(self.__comunidad.lista_ciudadanos[i].sano == True and
-                self.__comunidad.lista_ciudadanos[i].inmune == False):
-                    self.__poblacion_susceptible = self.__poblacion_susceptible + 1
-                if(self.__comunidad.lista_ciudadanos[i].inmune == True):
-                    self.__poblacion_inmune = self.__poblacion_inmune + 1
-                if(self.__comunidad.lista_ciudadanos[i].infectado == True):
-                    self.__casos_activos = self.__casos_activos + 1
-                self.__poblacion = self.__poblacion + 1
+        for lista_infectados_diarios in range(0, numero_dias):
+            self.__comunidad.lista_infectados = []
         
-        self.__poblacion_sanada = self.__poblacion_inmune - self.__casos_activos
+        """ instancia infectados iniciales -dia 0- que son almacenados en lista """
+        for self.id in range(0,self.__comunidad.num_inicial_infectados):
+            edad = edad = random.randint(0,90)
+            self.__comunidad.lista_infectados_append(dia=0,infectado=Infectado(self.id, edad))
 
-        print("--------------------------------------------------")
-        #print("Nuevos contagios: ", casos_nuevos_contagios)
-        print("Dia:", self.dia)
-        print("\nPoblacion total (vivos): ", self.__poblacion)
-        print("Casos activos:", self.__casos_activos)
-        print("Susceptibles a enfermarse: ", self.__poblacion_susceptible)
-        print("Sanados de enfermedad (vivos): ", self.__poblacion_sanada)
-        print("Fallecidos: ", len(self.__comunidad.lista_ciudadanos)-self.__poblacion)
+        # periodo de ciclo = dia
+        for self.dia in range(1, numero_dias):
+            self.transicion_estado_infectados()
+            self.evaluar_infeccion()
+            self.imprimir_data_diaria()
+            #self.crear_diccionario()
+        #self.write_data()
 
-        print("--------------------------------------------------")
+    """ evalua nuevas infecciones por dia """
+    def evaluar_infeccion(self):
+        # recorre infectados registrados en lista
+        for infectados_diarios in self.__comunidad.lista_infectados:
+            for infectado in infectados_diarios:
+                if infectado.estado_infeccioso == True and\
+                    infectado.estado_aislamiento == False:
+                    # se crean nuevos infectados
+                    self.estimador_nuevos_infectados()
 
+    def estimador_nuevos_infectados(self):
+
+        for contacto in range(0, self.__comunidad.promedio_conexion_fisica):
+            rand = random.randint(0,100)
+            if rand <= self.porcentaje_proba_infeccion and \
+                self.__comunidad.num_total_infectados < self.__comunidad.num_ciudadanos:
+                self.id = self.id + 1
+                edad = random.randint(0,90)
+                self.__comunidad.lista_infectados_append(self.dia,Infectado(self.id, edad))
     
-    """ se crea diccionario """
+    def transicion_estado_infectados(self):
+
+        if self.dia >= self.__comunidad.enfermedad.inicio_estado_infeccioso:
+            
+            for infectado in self.__comunidad.lista_infectados[self.dia - \
+                self.__comunidad.enfermedad.inicio_estado_infeccioso]:
+                infectado.estado('infeccioso', True)
+        
+        """ se da por supuesto que estado de aislamiento comienza el dia despues
+        del inicio de estado sintomatico """
+
+        inicio_aislamiento = self.__comunidad.enfermedad.inicio_estado_sintomatico + 1
+
+        if self.dia >= inicio_aislamiento:
+            
+            for infectado in self.__comunidad.lista_infectados[self.dia -\
+                inicio_aislamiento]:
+                infectado.estado('aislamiento', True)
+                infectado.estado('incubador', False)
+
+        
+        """ infectado es dado de 'alta', tal que pasa a estado inmune """
+        if self.dia >= self.__comunidad.enfermedad.promedio_pasos:
+
+            for infectado in self.__comunidad.lista_infectados[self.dia - \
+                self.__comunidad.enfermedad.promedio_pasos]:
+                infectado.estado('inmune', True)
+                infectado.estado('infeccioso', False)
+                self.evaluar_estado(infectado)
+    
+    def evaluar_estado(self, infectado):
+        
+        if infectado.edad <= 9:
+            tasa_de_letalidad = 0
+        elif infectado.edad >= 10 and 39 >= infectado.edad:
+            tasa_de_letalidad = 0.2
+        elif infectado.edad >= 40 and 49 >= infectado.edad:
+            tasa_de_letalidad = 0.4
+        elif infectado.edad >= 50 and 59 >= infectado.edad:
+            tasa_de_letalidad = 1.3
+        elif infectado.edad >= 60 and 69 >= infectado.edad:
+            tasa_de_letalidad = 3.6
+        elif infectado.edad >= 70 and 79 >= infectado.edad:
+            tasa_de_letalidad = 8
+        else:
+            tasa_de_letalidad = 14.8
+
+        rand = random.randint(0,100)
+
+        if rand <= tasa_de_letalidad:
+            #print("infectado ", infectado.ID, "muere")
+            infectado.vivo = False
+
+    def imprimir_data_diaria(self):
+
+        print("--------------------------------------------------")
+        print("Dia:", self.dia)
+        print("\nPoblacion total (vivos): ", self.__comunidad.num_ciudadanos - \
+            self.__comunidad.num_fallecidos)
+        print("Nuevos infectados: ", len(self.__comunidad.lista_infectados[self.dia]))
+        print("Total infectados: ", self.__comunidad.num_total_infectados) 
+        print("Casos activos:", self.__comunidad.num_casos_activos)
+        print("Susceptibles a enfermarse: ", self.__comunidad.num_ciudadanos - \
+            self.__comunidad.num_total_infectados)
+        print("Sanados de enfermedad (vivos): ", self.__comunidad.num_poblacion_sanada)
+        print("Fallecidos: ", self.__comunidad.num_fallecidos)
+
+        print("--------------------------------------------------")
+
+    """
+    
+    establecer limite para que cantidad de contagiados no supere la cantidad total poblacion
+
+    # se crea diccionario 
     def crear_diccionario(self):
 
         self.__dict ={
@@ -123,9 +142,6 @@ class Simulacion():
         with open("data.json", "w") as file:
             json.dump(self.__array, file, indent=4)
 
-    
-
-
-
+    """
 
 

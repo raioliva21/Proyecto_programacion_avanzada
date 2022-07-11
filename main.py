@@ -1,22 +1,30 @@
 from enfermedad import Enfermedad
 from comunidad import Comunidad
 from simulacion import Simulacion
-import json
+#import json
 
 
 def main():
-
-    virus_Z = Enfermedad(probabilidadInfeccion=0.3, promedio_pasos=10)
-
-    comunidad = Comunidad(num_ciudadanos=500,promedio_conexion_fisica=8,
-                          enfermedad=virus_Z,num_infectados=10,
+    
+    virus = Enfermedad(probabilidadInfeccion=0.3, promedio_pasos=14,
+                        inicio_estado_infeccioso=2, inicio_estado_sintomatico=5)
+    
+    """ 
+    Promedio_conexion_fisica refiere a aproximacion de contactos por dia 
+    de infectado en estado infeccioso y de no aislamiento.
+    Estado de aislamiento comienza al dia despues de inicio de estado sintomatico.
+    En estado de aislamiento se asume que infectado no infecta.
+    """
+    comunidad = Comunidad(num_ciudadanos=4000,promedio_conexion_fisica = 3,
+                          enfermedad=virus,num_infectados=10,
                            probabilidad_contacto_estrecho=0.8)
 
-    simulador = Simulacion(comunidad, virus_Z)
-    simulador.crea_contactos()
-    simulador.run(numero_dias=22)
+    simulador = Simulacion(comunidad)
+    simulador.run(numero_dias=25)
 
     """
+
+
     # Opening JSON file
     f = open('data.json')
     

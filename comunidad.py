@@ -1,81 +1,91 @@
-from ciudadano import Ciudadano
-import random as ran
+
+from infectado import Infectado
+
 
 class Comunidad():
-
-    """docstring for Comunidad."""
 
     def __init__(self, num_ciudadanos, promedio_conexion_fisica, enfermedad,
                   num_infectados, probabilidad_contacto_estrecho):
 
         # atributos de caracter privado
         self.__num_ciudadanos = num_ciudadanos
-        self.__lista_ciudadanos = []
-        self.__promedio_conexion = promedio_conexion_fisica
+        self.__promedio_conexion_fisica = promedio_conexion_fisica
         self.__enfermedad = enfermedad
-        self.__num_infectados = num_infectados
+        self.__num_inicial_infectados = num_infectados
         self.__probabilidad_contacto_estrecho = probabilidad_contacto_estrecho
-
-        # inicia ciclo y se instancian ciudadanos agregados en lista
-        for i in range(self.__num_ciudadanos):
-            self.__lista_ciudadanos.append(Ciudadano(i))
-
-        # infeccion aleatoria de ciudadanos
-        aux = 0
-        while aux < self.__num_infectados:
-            seleccionados = ran.randint(0, self.__num_infectados)
-            if(self.__lista_ciudadanos[seleccionados].infectado == False):
-                self.__lista_ciudadanos[seleccionados].sano = False
-                self.__lista_ciudadanos[seleccionados].inmune=True
-                self.__lista_ciudadanos[seleccionados].infectado = True
-                # menos 1 porque son del dia anterior
-                self.__lista_ciudadanos[seleccionados].contador = -1
-                aux = aux + 1
-
-    # getters and setters
+        """ lista infectados contiene lista de infectados en dia indicado por indice"""
+        # ejemplo: lista_infectados[0] -> lista infectados en dia 0
+        self.__lista_infectados = []
+    
     @property
-    def numero_ciudadano(self):
+    def num_ciudadanos(self):
         return self.__num_ciudadanos
-
-    @numero_ciudadano.setter
-    def numero_ciudadano(self, variable):
-        self.__num_ciudadanos = variable
-
+    
     @property
-    def lista_ciudadanos(self):
-        return self.__lista_ciudadanos
-
-    @lista_ciudadanos.setter
-    def lista_ciudadanos(self, variable):
-        self.__lista_ciudadanos = variable
+    def promedio_conexion_fisica(self):
+        return self.__promedio_conexion_fisica
+    
     @property
-    def promedio_conexion(self):
-        return self.__promedio_conexion
-
-    @promedio_conexion.setter
-    def promedio_conexion(self, variable):
-        self.__promedio_conexion = variable
-
-    @property
-    def dolencia(self):
+    def enfermedad(self):
         return self.__enfermedad
-
-    @dolencia.setter
-    def enfermedad(self, variable):
-        self.__enfermedad = variable
-
+    
     @property
-    def numero_infectados(self):
-        return self.numero_infectados
-
-    @numero_infectados.setter
-    def numero_infectados(self, variable):
-        self.__num_infectados = variable
-
+    def num_inicial_infectados(self):
+        return self.__num_inicial_infectados
+    
     @property
-    def probabilidad_conexion(self):
+    def probabilidad_contacto_estrecho(self):
         return self.__probabilidad_contacto_estrecho
+    
+    @property
+    def lista_infectados(self):
+        return self.__lista_infectados
+    
+    @lista_infectados.setter
+    def lista_infectados(self, lista_diaria):
+        if isinstance(lista_diaria, list):
+            self.__lista_infectados.append(lista_diaria)
+        else:
+            print("Error, lista_infectados.setter.")
+    
+    def lista_infectados_append(self, dia, infectado):
+        if isinstance (infectado, Infectado):
+            self.__lista_infectados[dia].append(infectado)
+        else:
+            print("Error, lista_infectados_append.setter.")
+    
+    @property
+    def num_fallecidos(self):
+        num_fallecidos = 0
+        for infectados_diarios in self.__lista_infectados:
+            for infectado in infectados_diarios:
+                if infectado.vivo == False:
+                    num_fallecidos = num_fallecidos + 1
+        return num_fallecidos
 
-    @probabilidad_conexion.setter
-    def probabilidad_conexion(self, variable):
-        self.__probabilidad_contacto_estrecho = variable
+    @property
+    def num_total_infectados(self):
+        num_total_infectados = 0
+        for infectados_diarios in self.__lista_infectados:
+            num_total_infectados = num_total_infectados + len(infectados_diarios)
+        return num_total_infectados
+
+    @property
+    def num_casos_activos(self):
+        num_casos_activos = 0
+        for infectados_diarios in self.__lista_infectados:
+            for infectado in infectados_diarios:
+                if infectado.estado_infeccioso == True:
+                    num_casos_activos = num_casos_activos + 1
+        return num_casos_activos
+
+    @property
+    def num_poblacion_sanada(self):
+        num_poblacion_sanada = 0
+        for infectados_diarios in self.__lista_infectados:
+            for infectado in infectados_diarios:
+                if infectado.estado_inmune == True and True == infectado.vivo:
+                    num_poblacion_sanada = num_poblacion_sanada + 1
+        return num_poblacion_sanada
+
+    
