@@ -145,7 +145,8 @@ class Simulacion():
             if rand <= self.porcentaje_proba_infeccion and \
                 self.__comunidad.num_total_infectados < self.__comunidad.num_ciudadanos:
                     ciudadano = random.choice(self.__comunidad.lista_ciudadanos)
-                    if ciudadano.estado_inmune == False:
+                    if ciudadano.estado_inmune == False and ciudadano.infectado == False:
+                        ciudadano.infectado = True
                         self.__comunidad.lista_infectados_append(self.dia,ciudadano)
             contacto =contacto+1     
 
@@ -234,7 +235,7 @@ class Simulacion():
         print("\nPoblacion total (vivos): ", self.__comunidad.num_ciudadanos - \
             self.__comunidad.num_fallecidos)
         print("Nuevos infectados: ", len(self.__comunidad.lista_infectados[self.dia]))
-        #print("Total infectados: ", self.__comunidad.num_total_infectados) 
+        print("Total infectados: ", self.__comunidad.num_total_infectados) 
         print("Casos activos:", self.__comunidad.num_casos_activos)
         print("Susceptibles a enfermarse: ", self.__comunidad.num_ciudadanos - \
             self.__comunidad.num_total_infectados)
