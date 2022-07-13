@@ -252,6 +252,7 @@ class Simulacion():
                 {"Poblacion total (vivos)" : self.__comunidad.num_ciudadanos - \
                 self.__comunidad.num_fallecidos,
                 "Nuevos infectados: ": len(self.__comunidad.lista_infectados[self.dia]),
+                "Total infectados: ": self.__comunidad.num_total_infectados,
                 "Casos activos:" : self.__comunidad.num_casos_activos,
                 "Susceptibles a enfermarse: " : self.__comunidad.num_ciudadanos - \
                 self.__comunidad.num_total_infectados,
