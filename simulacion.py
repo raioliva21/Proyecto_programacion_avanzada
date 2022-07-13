@@ -11,7 +11,7 @@ class Simulacion():
         self.porcentaje_proba_infeccion = self.__comunidad.probabilidad_contacto_estrecho * \
                             self.__comunidad.enfermedad.probabilidadInfeccion * 100
         self.dia = 0
-        self.__aa = {}
+        self.__dict = {}
         self.crear_poblacion_de_riesgo()
         self.crear_poblacion_vacunada()
     
@@ -259,13 +259,13 @@ class Simulacion():
                 "Sanados de enfermedad (vivos): " : self.__comunidad.num_poblacion_sanada,
                 "Fallecidos: ": self.__comunidad.num_fallecidos}
         }
-        self.__aa.update(_dict)
+        self.__dict.update(_dict)
 
 
     def write_data(self):
 
         with open("data.json", "w") as file:
-            json.dump(self.__aa, file, indent=4)
+            json.dump(self.__dict, file, indent=4)
 
     
 
